@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring-2.23.3.xsd">
+
+
+	<bean class="org.apache.camel.component.servlet.CamelHttpTransportServlet" id="camelHttpTransportServlet" />
+	<bean class="org.mycompany.erp.ERPProcessor" id="myProcessor" />
+	<bean class="org.springframework.boot.web.servlet.ServletRegistrationBean" id="servlet">
+		<property name="name" value="CamelServlet" />
+		<property name="servlet" ref="camelHttpTransportServlet" />
+		<property name="urlMappings" value="/serivce/*" />
+	</bean>
+	<camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+		<dataFormats>
+
+			<xmljson id="xmljson"   />
+			<xmljson id="jacksonxml" encoding="UTF-8" forceTopLevelObject="false" trimSpaces="false" skipNamespaces="false" skipWhitespace="false" removeNamespacePrefixes="false" />
+
+
+		</dataFormats>
+
+		<restConfiguration apiContextPath="api-docs" bindingMode="json" component="servlet" contextPath="/serivce/*">
+			<apiProperty key="cors" value="true" />
+			<apiProperty key="api.title" value="My First Camel API Lab" />
+			<apiProperty key="api.version" value="1.0.0" />
+		</restConfiguration>
+		<rest id="rest-e98725e4-dc21-40ee-ae30-34c464b88e92" path="/say">
+			<get id="get-280382e5-1ad0-419c-b372-edf29bdd82a2" uri="/hello">
+				<to uri="direct:hello" />
+			</get>
+			<!--<get id="get-eb6fd434-d3f7-4f0e-9212-9619e2d49355" uri="/bye">
+                <to uri="direct:bye"/> 
+             </get>-->
+			<get id="get-eb6fd434-d3f7-4f0e-9212-9619e2d49355" uri="/saybye">
+				<to uri="direct:saybye" />
+			</get>
+		</rest>
+		<route id="_route1">
+			<from id="_from1" uri="direct:hello" />
+			<transform id="_transform1">
+				<constant>Hello World</constant>
+			</transform>
+		</route>
+		<!-- <route id="_route2">
+            <from id="_from2" uri="direct:bye"/>
+            <process id="_process1" ref="myProcessor"/>
+            <marshal id="_marshal1">
+                <json library="Jackson"/>
+            </marshal>
+            <setHeader headerName="CamelHttpMethod" id="_setHeader1">
+                <constant>POST</constant>
+            </setHeader>
+            <log id="_log1" message="camel meyhod URL ${headers} "/>
+            <setHeader headerName="Content-Type" id="_setHeader2">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="Accept" id="_setHeader3">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="CamelHttpQuery">
+				<constant>pageNumber=${header.pageNumber}</constant>
+			</<setHeader>  
+            <log id="_log3" message="camel meyhod URL ${body} "/>
+            <log id="_log2" message="after URL ${headers} "/>
+            <to id="_to1" uri="http://localhost:9090/api/SelfService/SearchEmployeeByEmpIdOrNameWithPagination?bridgeEndpoint=true"/>
+            <unmarshal id="_unmarshal1">
+                <json library="Jackson" prettyPrint="true"/>
+            </unmarshal>
+        </route> -->
+		<route id="_route3">
+			<from id="_from3" uri="direct:saybye" />
+			<doTry id="_doTry1">
+				<process id="_process2" ref="myProcessor" />
+				<marshal id="_marshal2">
+					<json library="Jackson" />
+				</marshal>
+				<setHeader headerName="CamelHttpMethod" id="_setHeader4">
+					<constant>POST</constant>
+				</setHeader>
+				<log id="_log4" message="camel meyhod URL ${headers} " />
+				<setHeader headerName="Content-Type" id="_setHeader5">
+					<constant>application/json</constant>
+				</setHeader>
+				<setHeader headerName="Accept" id="_setHeader6">
+					<constant>application/json</constant>
+				</setHeader>
+				<log id="_log5" message="camel meyhod URL ${body} " />
+				<log id="_log6" message="after URL ${headers} " />
+				<!--<wireTap id="_wireTap1" uri="activemq:my-request" />
+				<log id="_log1" message="after wire tap ${body} " />
+				<setExchangePattern id="_setExchangePattern1" pattern="InOnly" />
+				<log id="_log2" message="while wire tap ${body} " /> -->
+				<to id="_to2" uri="seda:forwardtouri" />
+				<log id="_log3" message="behnid wire tap ${body} " />
+				<!--<to id="_to1" uri="activemq:my-response" />-->
+				<doCatch id="_doCatch1">
+					<exception>java.io.IOException</exception>
+					<exception>java.lang.IllegalStateException</exception>
+					<log id="_log7" message="${header.CamelHttpResponseCode}" />
+				</doCatch>
+			</doTry>
+		</route>
+		<route id="_route2">
+			<from id="_from2" uri="seda:forwardtouri" />
+			<!--	<unmarshal id="_unmarshal2" ref="jacksonxml"  />-->
+			<log message="before umarsha URL ${headers} " />
+			<unmarshal id="_marshal223">
+				<json library="Jackson"  />
+			</unmarshal>
+		 
+  		 <log message="after umarsha URL ${headers} " />
+			<wireTap id="_wireTap1" uri="activemq:my-request11" />
+			<log message="Before xls body URL ${body} " />
+			<!-- <to uri="xslt:file:///D:/RedHat Fuse/CodeReady Workspace/EIP/file/transformer.xsl"/> -->
+			<log message="after xls body URL ${body} " />
+
+			<log message="before seda URL ${headers} " />
+			<!--<marshal ref="xmljson"></!-marshal>-->
+			<!-- -->
+			<marshal id="_marshal22">
+				<json library="Jackson" />
+			</marshal>
+			<log message="after seda URL ${headers} " />
+			<log message="after seda body URL ${body} " />
+			<setExchangePattern id="_setExchangePattern1" pattern="InOut" />
+			<to id="_to3" uri="http://localhost:9090/api/SelfService/SearchEmployeeByEmpIdOrNameWithPagination" />
+			<!--	<unmarshal id="_unmarshal1" ref="jacksonxml" /> -->
+			<unmarshal id="_marshal2234">
+				<json library="Jackson" />
+			</unmarshal>
+			<setExchangePattern id="_setExchangePattern1" pattern="InOnly" />
+
+			<log id="_log1" message="after wire tap ${body} " />
+			<to id="_to1" uri="activemq:my-response11" />
+		</route>
+	</camelContext>
+</beans>
