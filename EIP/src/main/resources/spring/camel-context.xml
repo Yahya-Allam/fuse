@@ -108,21 +108,23 @@
 			</unmarshal>
 		 
   		 <log message="after umarsha URL ${headers} " />
-			<wireTap id="_wireTap1" uri="activemq:my-request11" />
-			<log message="Before xls body URL ${body} " />
+		    <log id="_log12282" message="after   wire tap " />
+			<!--<wireTap id="_wireTap1" uri="activemq:my-request11" /> -->
+			
+			 
 			<!-- <to uri="xslt:file:///D:/RedHat Fuse/CodeReady Workspace/EIP/file/transformer.xsl"/> -->
-			<log message="after xls body URL ${body} " />
+			 
 
-			<log message="before seda URL ${headers} " />
+		 
 			<!--<marshal ref="xmljson"></!-marshal>-->
 			<!-- -->
 			<marshal id="_marshal22">
 				<json library="Jackson" />
 			</marshal>
-			<log message="after seda URL ${headers} " />
-			<log message="after seda body URL ${body} " />
+			 
 			<setExchangePattern id="_setExchangePattern1" pattern="InOut" />
-			<to id="_to3" uri="http://localhost:9090/api/SelfService/SearchEmployeeByEmpIdOrNameWithPagination" />
+			  <log id="_log12292" message="before getting mock" />
+			<to id="_to3" uri="https://wiremock-jre-8-standalone-fuse-demo.apps.eu410.prod.nextcle.com/api/SelfService/SearchEmployeeByEmpIdOrNameWithPagination" />
 			<!--	<unmarshal id="_unmarshal1" ref="jacksonxml" /> -->
 			<unmarshal id="_marshal2234">
 				<json library="Jackson" />
@@ -130,7 +132,9 @@
 			<setExchangePattern id="_setExchangePattern1" pattern="InOnly" />
 
 			<log id="_log1" message="after wire tap ${body} " />
-			<to id="_to1" uri="activemq:my-response11" />
+			<!--<to id="_to1" uri="activemq:my-response11" />-->
+			<log id="_log1222" message="after deploy open shift " />
+			
 		</route>
 	</camelContext>
 </beans>
