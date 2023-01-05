@@ -108,7 +108,7 @@
 			</unmarshal>
 		 
   		 <log message="after umarsha URL ${headers} " />
-			<wireTap id="_wireTap1" uri="activemq:my-request11" />
+			<!--<wireTap id="_wireTap1" uri="activemq:my-request11" /> -->
 			<log message="Before xls body URL ${body} " />
 			<!-- <to uri="xslt:file:///D:/RedHat Fuse/CodeReady Workspace/EIP/file/transformer.xsl"/> -->
 			<log message="after xls body URL ${body} " />
@@ -130,7 +130,7 @@
 			<setExchangePattern id="_setExchangePattern1" pattern="InOnly" />
 
 			<log id="_log1" message="after wire tap ${body} " />
-			<to id="_to1" uri="activemq:my-response11" />
+			<!--<to id="_to1" uri="activemq:my-response11" />-->
 		</route>
 	</camelContext>
 </beans>
