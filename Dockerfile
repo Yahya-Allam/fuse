@@ -8,13 +8,8 @@ ENV ACTIVEMQ_HOME /opt/activemq
 RUN wget -O $ACTIVEMQ-bin.tar.gz https://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/$ACTIVEMQ-bin.tar.gz
 
 RUN tar xzf $ACTIVEMQ-bin.tar.gz -C  /opt && \
-    ln -s /opt/$ACTIVEMQ $ACTIVEMQ_HOME && \
-    useradd -r -M -d $ACTIVEMQ_HOME activemq && \
-    chown -R activemq:activemq /opt/$ACTIVEMQ && \
-    chown -h activemq:activemq $ACTIVEMQ_HOME && \
-    chmod -R g=u $ACTIVEMQ_HOME
-
-USER activemq
+    chgrp -R 0 /opt && \
+    chmod -R g=u /opt
 
 WORKDIR $ACTIVEMQ_HOME
 
