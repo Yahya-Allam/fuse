@@ -1,4 +1,7 @@
-FROM openjdk:8-jre-alpine
+#FROM openjdk:8-jre-alpine
+
+#Provide image stream tag from internal redhat registry
+FROM java-runtime:openjdk-8-ubi8
 
 ENV ACTIVEMQ_VERSION 5.15.6
 ENV ACTIVEMQ apache-activemq-$ACTIVEMQ_VERSION
