@@ -11,6 +11,9 @@ ENV ACTIVEMQ_HOME /opt/activemq
 #RUN wget -O $ACTIVEMQ-bin.tar.gz https://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/$ACTIVEMQ-bin.tar.gz
 RUN curl "https://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/$ACTIVEMQ-bin.tar.gz" -o $ACTIVEMQ-bin.tar.gz
 
+#for centOS only that is the base of ubi8/openjdk-8:latest
+RUN yum install tar
+
 RUN tar xzf $ACTIVEMQ-bin.tar.gz -C  /opt && \
     ln -s /opt/$ACTIVEMQ $ACTIVEMQ_HOME && \
     useradd -r -M -d $ACTIVEMQ_HOME activemq && \
