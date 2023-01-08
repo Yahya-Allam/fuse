@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre
 
 ENV ACTIVEMQ_VERSION 5.15.6
 ENV ACTIVEMQ apache-activemq-$ACTIVEMQ_VERSION
@@ -9,9 +9,9 @@ RUN wget -O $ACTIVEMQ-bin.tar.gz https://archive.apache.org/dist/activemq/$ACTIV
 
 RUN tar xzf $ACTIVEMQ-bin.tar.gz -C  /opt && \
     ln -s /opt/$ACTIVEMQ $ACTIVEMQ_HOME && \
-    adduser -S -H -h $ACTIVEMQ_HOME activemq && \
+    useradd -r -M -d $ACTIVEMQ_HOME activemq && \
     chown -R activemq:activemq /opt/$ACTIVEMQ && \
-    chown -h activemq:activemq $ACTIVEMQ_HOME 
+    chown -h activemq:activemq $ACTIVEMQ_HOME
 
 USER activemq
 
